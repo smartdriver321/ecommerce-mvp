@@ -4,24 +4,29 @@ import { ArrowRight } from 'lucide-react'
 
 import db from '@/db/db'
 import { Product } from '@prisma/client'
+import { cache } from '@/lib/cache'
 import { ProductCard, ProductCardSkeleton } from '@/components/ProductCard'
 import { Button } from '@/components/ui/button'
 
-const getMostPopularProducts = () => {
-	return db.product.findMany({
-		where: { isAvailableForPurchase: true },
-		orderBy: { orders: { _count: 'desc' } },
-		take: 6,
-	})
-}
+const getMostPopularProducts = cache(
+	() => {
+		return db.product.findMany({
+			where: { isAvailableForPurchase: true },
+			orderBy: { orders: { _count: 'desc' } },
+			take: 6,
+		})
+	},
+	['/', 'getMostPopularProducts'],
+	{ revalidate: 60 * 60 * 24 }
+)
 
-const getNewestProducts = () => {
+const getNewestProducts = cache(() => {
 	return db.product.findMany({
 		where: { isAvailableForPurchase: true },
 		orderBy: { createdAt: 'desc' },
 		take: 6,
 	})
-}
+}, ['/', 'getNewestProducts'])
 
 export default function Home() {
 	return (
