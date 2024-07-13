@@ -1,4 +1,4 @@
-import { cache, Suspense } from 'react'
+import { Suspense } from 'react'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 
@@ -7,21 +7,21 @@ import { Product } from '@prisma/client'
 import { ProductCard, ProductCardSkeleton } from '@/components/ProductCard'
 import { Button } from '@/components/ui/button'
 
-const getMostPopularProducts = cache(() => {
+const getMostPopularProducts = () => {
 	return db.product.findMany({
 		where: { isAvailableForPurchase: true },
 		orderBy: { orders: { _count: 'desc' } },
 		take: 6,
 	})
-})
+}
 
-const getNewestProducts = cache(() => {
+const getNewestProducts = () => {
 	return db.product.findMany({
 		where: { isAvailableForPurchase: true },
 		orderBy: { createdAt: 'desc' },
 		take: 6,
 	})
-})
+}
 
 export default function Home() {
 	return (
