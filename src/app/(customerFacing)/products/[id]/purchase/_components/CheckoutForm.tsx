@@ -144,7 +144,7 @@ function Form({
 					>
 						{isLoading
 							? 'Purchasing...'
-							: `Purchase - ${formatCurrency(priceInCents / 100)}`}
+							: `Purchase => ${formatCurrency(priceInCents / 100)}`}
 					</Button>
 				</CardFooter>
 			</Card>
